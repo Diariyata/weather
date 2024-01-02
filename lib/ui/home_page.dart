@@ -9,7 +9,7 @@ import 'package:weather/constants.dart';
 import 'package:weather/ui/detail_page.dart';
 
 import 'package:http/http.dart' as http;
-import 'package::intl/intl.dart';
+import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
@@ -84,13 +84,13 @@ class _HomePageState extends State<HomePage> {
 
   //function to return the first two names of the string location
   static String getShortLocationName(String s) {
-    List<String> worldList = s.split(" ");
+    List<String> wordList = s.split(" ");
 
-    if (worldList.isNotEmpty) {
-      if (worldList.length > 1) {
-        return worldList[0] + " " + worldList[1];
+    if (wordList.isNotEmpty) {
+      if (wordList.length > 1) {
+        return wordList[0] + " " + wordList[1];
       } else {
-        return worldList[0];
+        return wordList[0];
       }
     } else {
       return " ";
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                               _cityController.clear();
                               showMaterialModalBottomSheet(
                                   context: context,
-                                  builder: ((context) => SingleChildScrollView(
+                                  builder: (context) => SingleChildScrollView(
                                         controller:
                                             ModalScrollController.of(context),
                                         child: Container(
@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                                             ],
                                           ),
                                         ),
-                                      )));
+                                      ));
                             },
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
@@ -251,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(
                     height: 160,
-                    child: Image.asset('assets/' + weatherIcon),
+                    child: Image.asset("assets/" + weatherIcon),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
