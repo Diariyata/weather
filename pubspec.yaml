@@ -38,7 +38,10 @@ dependencies:
 
   http: 1.1.0
   intl: ^0.19.0
-  modal_bottom_sheet: ^2.0.1
+  modal_bottom_sheet: 
+      git:
+          url: https://github.com/jamesblasco/modal_bottom_sheet
+          path: modal_bottom_sheet
 
 dev_dependencies:
   flutter_test:

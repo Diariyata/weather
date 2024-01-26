@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/components/weather_item.dart';
