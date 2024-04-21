@@ -9,7 +9,6 @@ import 'package:weather/constants.dart';
 import 'package:weather/ui/detail_page.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
   static String API_KEY = "b922b575197b43f1af2201633232512";
 
-  String location = 'London'; //Default location
+  String location = 'Paris'; //Default location
   String weatherIcon = 'heavycloud.png';
   int temperature = 0;
   int windSpeed = 0;
@@ -39,9 +38,8 @@ class _HomePageState extends State<HomePage> {
   String currentWeatherStatus = '';
 
   //API Call
-  String searchWeatherAPI = 'https://api.weatherapi.com/v1/forecast.json?key=' +
-      API_KEY +
-      '&days=7&q=';
+  String searchWeatherAPI =
+      'https://api.weatherapi.com/v1/forecast.json?key=$API_KEY&days=7&q=';
 
   void fetchWeatherData(String searchText) async {
     try {
@@ -65,8 +63,8 @@ class _HomePageState extends State<HomePage> {
 
         //updateWeather
         currentWeatherStatus = currentWeather["condition"]["text"];
-        weatherIcon =
-            currentWeatherStatus.replaceAll(' ', ' ').toLowerCase() + ".png";
+        String weatherIcon =
+            "${currentWeatherStatus.replaceAll(' ', ' ').toLowerCase()}.png";
         temperature = currentWeather["temp_c"].toInt();
         windSpeed = currentWeather["wind_kph"].toInt();
         humidity = currentWeather["humidity"].toInt();
@@ -75,7 +73,6 @@ class _HomePageState extends State<HomePage> {
         //Forecast data
         dailyWeatherForecast = weatherData["forecast"]["forecastday"];
         hourlyWeatherForecast = dailyWeatherForecast[0]["hour"];
-        print(dailyWeatherForecast);
       });
     } catch (e) {
       //debugPrint(e);
@@ -88,7 +85,7 @@ class _HomePageState extends State<HomePage> {
 
     if (wordList.isNotEmpty) {
       if (wordList.length > 1) {
-        return wordList[0] + " " + wordList[1];
+        return "${wordList[0]} ${wordList[1]}";
       } else {
         return wordList[0];
       }
@@ -115,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         width: size.width,
         height: size.height,
-        padding: const EdgeInsets.only(top: 70, left: 10, right: 10),
+        padding: const EdgeInsets.only(top: 50, left: 10, right: 10),
         color: _constants.primaryColor.withOpacity(.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -250,8 +247,8 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   SizedBox(
-                    height: 160,
-                    child: Image.asset("assets/" + weatherIcon),
+                    height: 150,
+                    child: Image.asset("assets/$weatherIcon"),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                         'Today',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
+                          fontSize: 18.0,
                         ),
                       ),
                       GestureDetector(
@@ -346,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                                           dailyWeatherForecast,
                                     ))), //this will open forecast sreen
                         child: Text(
-                          'Forecast',
+                          'Prévisions météo',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -360,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                     height: 8,
                   ),
                   SizedBox(
-                    height: 110,
+                    height: 97,
                     child: ListView.builder(
                       itemCount: hourlyWeatherForecast.length,
                       scrollDirection: Axis.horizontal,
@@ -379,10 +376,8 @@ class _HomePageState extends State<HomePage> {
 
                         String forecastWeatherName =
                             hourlyWeatherForecast[index]["condition"]["text"];
-                        String forecastWeatherIcon = forecastWeatherName
-                                .replaceAll(' ', '')
-                                .toLowerCase() +
-                            ".png";
+                        String forecastWeatherIcon =
+                            "${forecastWeatherName.replaceAll(' ', '').toLowerCase()}.png";
 
                         String forecastTemperature =
                             hourlyWeatherForecast[index]["temp_c"]
@@ -412,13 +407,13 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 forecastTime,
                                 style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 15,
                                   color: _constants.greyColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Image.asset(
-                                'assets/' + forecastWeatherIcon,
+                                'assets/$forecastWeatherIcon',
                                 width: 20,
                               ),
                               Row(
@@ -428,16 +423,16 @@ class _HomePageState extends State<HomePage> {
                                     forecastTemperature,
                                     style: TextStyle(
                                       color: _constants.greyColor,
-                                      fontSize: 17,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   Text(
-                                    'o',
+                                    '°',
                                     style: TextStyle(
                                       color: _constants.greyColor,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 17,
+                                      fontSize: 15,
                                       fontFeatures: const [
                                         FontFeature.enable('sups'),
                                       ],

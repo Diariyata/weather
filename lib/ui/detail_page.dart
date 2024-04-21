@@ -6,9 +6,10 @@ import 'package:weather/components/weather_item.dart';
 import 'package:weather/constants.dart';
 
 class DetailPage extends StatefulWidget {
-  final dailyForecastWeather;
+  final List dailyForecastWeather;
 
-  const DetailPage({Key? key, this.dailyForecastWeather}) : super(key: key);
+  const DetailPage({Key? key, required this.dailyForecastWeather})
+      : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -19,43 +20,67 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    //print('dailyForecastWeather: ${widget.dailyForecastWeather}');
+
     Size size = MediaQuery.of(context).size;
     var weatherData = widget.dailyForecastWeather;
 
     //function to get weather
     Map getForecastWeather(int index) {
+      //print('Index: $index');
+      //print('Weather Data: ${weatherData[index]}');
+
       int maxWindSpeed = weatherData[index]["day"]["maxwind_kph"].toInt();
       int avgHumidity = weatherData[index]["day"]["avghumidity"].toInt();
       int chanceOfRain =
           weatherData[index]["day"]["daily_chance_of_rain"].toInt();
+      int avgVisibility = weatherData[index]["day"]["avgvis_km"].toInt();
+      int totalPrecipitation =
+          weatherData[index]["day"]["totalprecip_mm"].toInt();
+      int avgTemperature = weatherData[index]["day"]["avgtemp_c"].toInt();
+      int uv = weatherData[index]["day"]["uv"].toInt();
 
       var parseDate = DateTime.parse(weatherData[index]["date"]);
       var forecastDate = DateFormat('EEEE, d MMMM').format(parseDate);
 
+      print('Forecast Date: $forecastDate');
+
       String weatherName = weatherData[index]["day"]["condition"]["text"];
+      // print('Weather Name: $weatherName');
+
       String weatherIcon =
-          weatherName.replaceAll(' ', '').toLowerCase() + ".png";
+          "${weatherName.replaceAll(' ', '').toLowerCase()}.png";
+      // print('Weather Icon: $weatherIcon');
 
       int minTemperature = weatherData[index]["day"]["mintemp_c"].toInt();
       int maxTemperature = weatherData[index]["day"]["maxtemp_c"].toInt();
+
+      print('Min Temperature: $minTemperature');
+      print('Max Temperature: $maxTemperature');
 
       var forecastData = {
         'maxWindSpeed': maxWindSpeed,
         'avgHumidity': avgHumidity,
         'chanceOfRain': chanceOfRain,
+        'avgVisibility': avgVisibility,
+        'totalPrecipitation': totalPrecipitation,
+        'avgTemperature': avgTemperature,
         'forecastDate': forecastDate,
         'weatherName': weatherName,
         'weatherIcon': weatherIcon,
         'minTemperature': minTemperature,
         'maxTemperature': maxTemperature,
+        'uv': uv,
       };
+
+      print("VOici les data Forecast : $forecastData");
       return forecastData;
     }
 
     return Scaffold(
       backgroundColor: _constants.primaryColor,
       appBar: AppBar(
-        title: const Text('Forecasts'),
+        title: const Text('Prévisions météo'),
         centerTitle: true,
         backgroundColor: _constants.primaryColor,
         elevation: 0.0,
@@ -87,112 +112,123 @@ class _DetailPageState extends State<DetailPage> {
                   topRight: Radius.circular(50),
                 ),
               ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    top: -50,
-                    right: 20,
-                    left: 20,
-                    child: Container(
-                      height: 300,
-                      width: size.width * .7,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.center,
-                            colors: [
-                              Color(0xffa9c1f5),
-                              Color(0xff6696f5),
-                            ]),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(.1),
-                            offset: const Offset(0, 25),
-                            blurRadius: 3,
-                            spreadRadius: -10,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned(
-                            child: Image.asset("assets/" +
-                                getForecastWeather(0)["weatherIcon"]),
-                            width: 150,
-                          ),
-                          Positioned(
-                              top: 150,
-                              left: 30,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 10.0),
-                                child: Text(
-                                  getForecastWeather(0)["weatherName"],
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              )),
-                          Positioned(
-                            bottom: 20,
-                            left: 20,
-                            child: Container(
-                              width: size.width * .8,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  WeatherItem(
-                                      value:
-                                          getForecastWeather(0)["maxWindSpeed"],
-                                      unit: "km/h",
-                                      imageUrl: "assets/windspeed.png"),
-                                  WeatherItem(
-                                      value:
-                                          getForecastWeather(0)["avgHumidity"],
-                                      unit: "%",
-                                      imageUrl: "assets/humidity.png"),
-                                  WeatherItem(
-                                      value:
-                                          getForecastWeather(0)["chanceOfRain"],
-                                      unit: "%",
-                                      imageUrl: "assets/lightrain.png"),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 20,
-                            right: 20,
+              child: Stack(clipBehavior: Clip.none, children: [
+                Positioned(
+                  top: -50,
+                  right: 20,
+                  left: 20,
+                  child: Container(
+                    height: 300,
+                    width: size.width * .7,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.center,
+                          colors: [
+                            Color(0xffa9c1f5),
+                            Color(0xff6696f5),
+                          ]),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(.1),
+                          offset: const Offset(0, 25),
+                          blurRadius: 3,
+                          spreadRadius: -10,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          child: Image.asset(
+                              "assets/" + getForecastWeather(0)["weatherIcon"]),
+                          width: 150,
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          left: 20,
+                          child: Container(
+                            width: size.width * .8,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  getForecastWeather(0)["maxTemperature"]
-                                      .toString(),
-                                  style: TextStyle(
-                                    fontSize: 80,
-                                    fontWeight: FontWeight.bold,
-                                    foreground: Paint()
-                                      ..shader = _constants.shader,
-                                  ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)["maxWindSpeed"],
+                                  unit: "km/h",
+                                  imageUrl: "assets/windspeed.png",
                                 ),
-                                Text(
-                                  "o",
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    foreground: Paint()
-                                      ..shader = _constants.shader,
-                                  ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)["avgHumidity"],
+                                  unit: "%",
+                                  imageUrl: "assets/humidity.png",
+                                ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)["chanceOfRain"],
+                                  unit: "%",
+                                  imageUrl: "assets/lightrain.png",
+                                ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)[
+                                      "avgVisibility"], // Added avgVisibility
+                                  unit: "km/h",
+                                  imageUrl: "assets/visibility.png",
+                                ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)[
+                                      "totalPrecipitation"], // Added totalPrecipitation
+                                  unit: "mm",
+                                  imageUrl: "assets/precipitation.png",
+                                ),
+                                WeatherItem(
+                                  value: getForecastWeather(0)[
+                                      "avgTemperature"], // Added avgTemperature
+                                  unit: "°C",
+                                  imageUrl: "assets/temperature.png",
+                                ),
+                                WeatherItem(
+                                  value: getForecastWeather(
+                                      0)["uv"], // Added pressureIn
+                                  unit:
+                                      "", // Assuming the unit is inches, adjust as needed
+                                  imageUrl:
+                                      "assets/pression.png", // Replace with the actual image URL
                                 ),
                               ],
                             ),
                           ),
-                          Positioned(
+                        ),
+                        Positioned(
+                          top: 20,
+                          right: 20,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                getForecastWeather(0)["maxTemperature"]
+                                    .toString(),
+                                style: TextStyle(
+                                  fontSize: 80,
+                                  fontWeight: FontWeight.bold,
+                                  foreground: Paint()
+                                    ..shader = _constants.shader,
+                                ),
+                              ),
+                              Text(
+                                'o',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  foreground: Paint()
+                                    ..shader = _constants.shader,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
                             top: 320,
                             left: 0,
                             child: SizedBox(
@@ -241,7 +277,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .greyColor,
@@ -271,7 +307,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .blackColor,
@@ -302,7 +338,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Image.asset(
-                                                    "assets/" +
+                                                    'assets/' +
                                                         getForecastWeather(
                                                             0)["weatherIcon"],
                                                     width: 30,
@@ -310,9 +346,12 @@ class _DetailPageState extends State<DetailPage> {
                                                   const SizedBox(
                                                     width: 5,
                                                   ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
                                                   Text(
                                                     getForecastWeather(
-                                                        0)["WeatherName"],
+                                                        0)["weatherName"],
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.grey,
@@ -338,7 +377,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     width: 5,
                                                   ),
                                                   Image.asset(
-                                                    "assets/lightrain.png",
+                                                    'assets/lightrain.png',
                                                     width: 30,
                                                   ),
                                                 ],
@@ -349,6 +388,7 @@ class _DetailPageState extends State<DetailPage> {
                                       ),
                                     ),
                                   ),
+                                  // deuxieme card
                                   Card(
                                     elevation: 3.0,
                                     margin: const EdgeInsets.only(bottom: 20),
@@ -389,7 +429,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .greyColor,
@@ -419,7 +459,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .blackColor,
@@ -450,7 +490,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Image.asset(
-                                                    "assets/" +
+                                                    'assets/' +
                                                         getForecastWeather(
                                                             1)["weatherIcon"],
                                                     width: 30,
@@ -460,7 +500,7 @@ class _DetailPageState extends State<DetailPage> {
                                                   ),
                                                   Text(
                                                     getForecastWeather(
-                                                        1)["WeatherName"],
+                                                        0)["weatherName"],
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.grey,
@@ -486,7 +526,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     width: 5,
                                                   ),
                                                   Image.asset(
-                                                    "assets/lightrain.png",
+                                                    'assets/lightrain.png',
                                                     width: 30,
                                                   ),
                                                 ],
@@ -497,6 +537,7 @@ class _DetailPageState extends State<DetailPage> {
                                       ),
                                     ),
                                   ),
+                                  // troisième card
                                   Card(
                                     elevation: 3.0,
                                     margin: const EdgeInsets.only(bottom: 20),
@@ -537,7 +578,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .greyColor,
@@ -567,7 +608,7 @@ class _DetailPageState extends State<DetailPage> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        'o',
+                                                        '°',
                                                         style: TextStyle(
                                                             color: _constants
                                                                 .blackColor,
@@ -598,7 +639,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Image.asset(
-                                                    "assets/" +
+                                                    'assets/' +
                                                         getForecastWeather(
                                                             2)["weatherIcon"],
                                                     width: 30,
@@ -608,7 +649,7 @@ class _DetailPageState extends State<DetailPage> {
                                                   ),
                                                   Text(
                                                     getForecastWeather(
-                                                        2)["WeatherName"],
+                                                        2)["weatherName"],
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.grey,
@@ -634,7 +675,7 @@ class _DetailPageState extends State<DetailPage> {
                                                     width: 5,
                                                   ),
                                                   Image.asset(
-                                                    "assets/lightrain.png",
+                                                    'assets/lightrain.png',
                                                     width: 30,
                                                   ),
                                                 ],
@@ -647,16 +688,14 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
+                            ))
+                      ],
                     ),
                   ),
-                ],
-              ),
+                )
+              ]),
             ),
-          ),
+          )
         ],
       ),
     );
